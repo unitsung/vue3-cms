@@ -12,13 +12,19 @@ const loginModule: Module<ILoginState, IRootState> = {
     }
   },
   getters: {},
-  mutations: {},
+  mutations: {
+    mutationTest() {
+      console.log('test')
+    }
+  },
   actions: {
     accountLoginAction({ commit }, payload: any) {
       console.log('执行accountLoginAction', payload)
+      commit('mutationTest')
     },
     phoneLoginAction({ commit }, payload: any) {
-      console.log('执行phoneLogin')
+      console.log('执行phoneLogin', payload)
+      commit('mutationTest')
     }
   }
 }
