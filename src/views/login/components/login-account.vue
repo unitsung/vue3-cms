@@ -42,7 +42,6 @@ export default defineComponent({
 
           // 执行登录逻辑
           store.dispatch('login/accountLoginAction', { ...account })
-          console.log('account login .....')
         }
       })
     }

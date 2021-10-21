@@ -2,7 +2,8 @@ import axios from 'axios'
 import { AxiosInstance } from 'axios'
 import type { HYRequestConfig, HYRequestInterceptors } from './type'
 
-import { ElLoading, ILoadingInstance } from 'element-plus'
+import { ElLoading } from 'element-plus'
+import type { ILoadingInstance } from 'element-plus/lib/el-loading/src/loading.type'
 
 // 1.根据不同的config创建不同的axios实例
 // 2.给config:AxiosRequestConfig 添加上拦截器
@@ -37,7 +38,7 @@ class HYRequest {
     // 添加所有实例的拦截器
     this.instance.interceptors.request.use(
       (config) => {
-        console.log('所有实例都有的拦截器：请求拦截成功...')
+        // console.log('所有实例都有的拦截器：请求拦截成功...')
 
         if (this.showLoading) {
           this.loading = ElLoading.service({
@@ -49,32 +50,30 @@ class HYRequest {
         return config
       },
       (err) => {
-        console.log('所有实例都有的拦截器：请求拦截失败...')
+        // console.log('所有实例都有的拦截器：请求拦截失败...')
         return err
       }
     )
     this.instance.interceptors.response.use(
       (res) => {
-        console.log('所有实例都有的拦截器：响应拦截成功...')
+        // console.log('所有实例都有的拦截器：响应拦截成功...')
 
         // 将loading移除
-        setTimeout(() => {
-          this.loading?.close()
-        }, 1000)
+        this.loading?.close()
 
         const data: any = res.data
         if (data.returnCode === '-1001') {
-          console.log('请求失败~,错误信息...')
+          // console.log('请求失败~,错误信息...')
         } else {
           return data
         }
       },
       (err) => {
-        console.log('所有的实例的拦截器:响应拦截失败...')
+        // console.log('所有的实例的拦截器:响应拦截失败...')
         this.loading?.close()
 
         if (err.response.status === 404) {
-          console.log('404错误...')
+          // console.log('404错误...')
         }
         return err
       }
@@ -98,7 +97,7 @@ class HYRequest {
           if (config.interceptors?.responseInterceptor) {
             res = config.interceptors.responseInterceptor(res)
           }
-          console.log(res)
+          // console.log(res)
           // 2.将showLoading设置为true,遮掩不会影响下一次请求
           this.showLoading = DEFAULT_LOADING
           // 3.将返回的结果，返回出去
