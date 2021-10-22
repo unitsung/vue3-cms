@@ -9,6 +9,7 @@ import {
 import { IAccount } from '@/service/login/types'
 import localCache from '@/utils/cache'
 import router from '@/router'
+import { mapMenuToRoutes } from '@/utils/mapMenus'
 
 // 必须传入两个泛型 模块state的类型，根模块state类型
 const loginModule: Module<ILoginState, IRootState> = {
@@ -30,6 +31,14 @@ const loginModule: Module<ILoginState, IRootState> = {
     },
     changeUserMenu(state, userMenu: any) {
       state.userMenu = userMenu
+
+      // userMenu => routes 动态添加路由
+      // 根据服务器返回的url,匹配本地定义好的路由映射,动态添加routes
+      const routes = mapMenuToRoutes(userMenu)
+      // routes => router.main.children
+      routes.forEach((route) => {
+        router.addRoute('main', route)
+      })
     }
   },
   actions: {
