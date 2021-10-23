@@ -24,6 +24,5 @@ const app = createApp(App)
 
 // 注册element-plus
 app.use(globalRegister)
-app.use(router).use(store).mount('#app')
-
 setupStore()
+app.use(router).use(store).mount('#app')
