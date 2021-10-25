@@ -5,7 +5,7 @@
       <span class="title" v-show="!collapse">Vue3+TS</span>
     </div>
     <el-menu
-      default-active="2"
+      :default-active="defaultValue"
       class="el-menu-vertical"
       background-color="#0c2135"
       :collapse="collapse"
@@ -47,9 +47,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import { defineComponent, computed, ref } from 'vue'
 import { useStore } from '@/store'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
+
+import { pathMapToMenu } from '@/utils/mapMenus'
 
 export default defineComponent({
   props: {
@@ -61,18 +63,38 @@ export default defineComponent({
     }
   },
   setup() {
+    // store
     const store = useStore()
     const userMenus = computed(() => store.state.login.userMenu)
     // userMemu.type===1 可展开菜单
+
+    // router
     const router = useRouter()
+
+    /*
+     * 解决elmenu default-active问题:
+     * 1. 拿到路径
+     * 2. 根据路径去匹配menu
+     * 3. 拿到menu.id作为defalt-active
+     */
+    const route = useRoute()
+    const currentPath = route.path
+
+    // data
+    const menu = pathMapToMenu(userMenus.value, currentPath)
+    const defaultValue = ref(menu.id)
+
+    // eventHandle
     const handleItemClick = (item: any) => {
       router.push({
         path: item.url ?? '/not-found'
       })
     }
+
     return {
       userMenus,
-      handleItemClick
+      handleItemClick,
+      defaultValue
     }
   }
 })

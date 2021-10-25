@@ -1,5 +1,7 @@
 import { RouteRecordRaw } from 'vue-router'
 
+let firstMenu: any = ''
+
 export function mapMenuToRoutes(userMenus: any[]): RouteRecordRaw[] {
   const routes: RouteRecordRaw[] = []
 
@@ -25,6 +27,10 @@ export function mapMenuToRoutes(userMenus: any[]): RouteRecordRaw[] {
         if (route) {
           routes.push(route)
         }
+        // 保留第一个菜单，解决访问 #/main空白问题 将重定向到第一个菜单
+        if (!firstMenu) {
+          firstMenu = menu
+        }
       } else {
         _recurveGetRoute(menu.children)
       }
@@ -34,3 +40,18 @@ export function mapMenuToRoutes(userMenus: any[]): RouteRecordRaw[] {
 
   return routes
 }
+
+export function pathMapToMenu(userMenus: any[], currentPath: string): any {
+  for (const menu of userMenus) {
+    if (menu.type === 1) {
+      const findMenu = pathMapToMenu(menu.children ?? [], currentPath)
+      if (findMenu) {
+        return findMenu
+      }
+    } else if (menu.type === 2 && menu.url === currentPath) {
+      return menu
+    }
+  }
+}
+
+export { firstMenu }

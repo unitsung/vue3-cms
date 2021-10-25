@@ -2,6 +2,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 
 import localCache from '@/utils/cache'
+import { firstMenu } from '@/utils/mapMenus'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -36,6 +37,10 @@ router.beforeEach((to) => {
     if (!token) {
       return '/login'
     }
+  }
+  // 解决访问/main空白问题
+  if (to.path === '/main') {
+    return firstMenu.url
   }
 })
 
