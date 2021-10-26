@@ -43,4 +43,9 @@ export default defineComponent({
 })
 </script>
 
-<style scoped></style>
+<style scoped lang="less">
+.handle-btns {
+  text-align: right;
+  padding: 0 50px 20px 0;
+}
+</style>

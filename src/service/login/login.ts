@@ -1,5 +1,6 @@
 import hyRequest from '../index'
-import { IAccount, IDataType, ILoginResult } from './types'
+import { IAccount, ILoginResult } from './types'
+import { IDataType } from '@/service/types'
 
 // url会变变，或者多个，放到枚举里边
 
