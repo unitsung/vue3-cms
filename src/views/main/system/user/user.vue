@@ -2,21 +2,10 @@
   <div class="user">
     <div class="content">
       <page-search :searchFormConfig="searchFormConfig"></page-search>
-      <div class="content1">
-        <hy-table :listData="userList" :propList="propList">
-          <template #status="scope">
-            <el-button
-              plain
-              size="mini"
-              :type="scope.row.enable ? 'success' : 'danger'"
-              >{{ scope.row.enable ? '启用' : '禁用' }}</el-button
-            >
-          </template>
-          <template #createAt="scope">
-            <strong>{{ scope.row.createAt }}</strong>
-          </template>
-        </hy-table>
-      </div>
+      <page-content
+        :contentTableConfig="contentTableConfig"
+        :userList="userList"
+      ></page-content>
     </div>
   </div>
 </template>
@@ -24,15 +13,16 @@
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
 import { searchFormConfig } from './config/search.config'
-import PageSearch from '@/components/page-search'
 import { useStore } from '@/store'
-import HyTable from '@/base-ui/table'
+import { contentTableConfig } from './config/content.config'
+import PageSearch from '@/components/page-search'
+import PageContent from '@/components/page-content'
 
 export default defineComponent({
   name: 'user',
   components: {
     PageSearch,
-    HyTable
+    PageContent
   },
   setup() {
     const store = useStore()
@@ -44,56 +34,20 @@ export default defineComponent({
       }
     })
     const userList = computed(() => store.state.system.userList)
-    const userCount = computed(() => store.state.system.userCount)
-
-    const propList = [
-      {
-        prop: 'name',
-        label: '用户名',
-        minWidth: '100'
-      },
-      {
-        prop: 'realname',
-        label: '真实姓名',
-        minWidth: '100'
-      },
-      {
-        prop: 'cellphone',
-        label: '手机号码',
-        minWidth: '100'
-      },
-      {
-        prop: 'enable',
-        label: '状态',
-        minWidth: '100',
-        slotName: 'status'
-      },
-      {
-        prop: 'createAt',
-        label: '创建时间',
-        minWidth: '250',
-        slotName: 'createAt'
-      },
-      {
-        prop: 'updateAt',
-        label: '更新时间',
-        minWidth: '250',
-        slotName: 'updateAt'
-      }
-    ]
+    // const userCount = computed(() => store.state.system.userCount)
 
     return {
       searchFormConfig,
       userList,
-      userCount,
-      propList
+      // userCount,
+      contentTableConfig
     }
   }
 })
 </script>
 
 <style lang="less" scoped>
-.content1 {
+.page-content {
   padding: 20px;
   border-top: 20px solid #f5f5f5;
 }
