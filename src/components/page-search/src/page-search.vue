@@ -6,7 +6,9 @@
       </template>
       <template #footer>
         <div class="handle-btns">
-          <el-button icon="el-icon-refresh">重置</el-button>
+          <el-button icon="el-icon-refresh" @click="handleResetClick"
+            >重置</el-button
+          >
           <el-button type="primary" icon="el-icon-search">搜索</el-button>
         </div>
       </template>
@@ -28,16 +30,24 @@ export default defineComponent({
   components: {
     HyForm
   },
-  setup() {
-    const formData = ref({
-      id: '',
-      name: '',
-      password: '',
-      sport: '',
-      createTime: ''
-    })
+  setup(props) {
+    // 双向绑定的属性应该是由配置文件的field字段决定
+    // 1.优化一：formData中的属性应该动态来决定
+    const formItems = props.searchFormConfig?.formItems ?? []
+    const formOriginData: any = {}
+    for (const item of formItems) {
+      formOriginData[item.field] = ''
+    }
+    const formData = ref(formOriginData)
+
+    // 2.优化二：用户点击重置
+    const handleResetClick = () => {
+      console.log('重置')
+    }
+
     return {
-      formData
+      formData,
+      handleResetClick
     }
   }
 })
