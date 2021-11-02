@@ -2,7 +2,7 @@ import { createStore, Store, useStore as useVuexStore } from 'vuex'
 
 import login from './login/login'
 import { IRootState, IStoreType } from './types'
-import system from './main/system/system'
+import system from './main/product/system/system'
 
 const store = createStore<IRootState>({
   state() {

@@ -57,20 +57,24 @@ export default defineComponent({
     const store = useStore()
 
     // 发送网络请求
-    store.dispatch('system/getPageListAction', {
-      pageName: props.pageName,
-      queryInfo: {
-        offset: 0,
-        size: 10
-      }
-    })
-
+    const getPageData = (queryInfo: any = {}) => {
+      store.dispatch('system/getPageListAction', {
+        pageName: props.pageName,
+        queryInfo: {
+          offset: 0,
+          size: 10,
+          ...queryInfo
+        }
+      })
+    }
+    getPageData()
     // 从vuex拿到数据
     const dataList = computed(() =>
       store.getters['system/pageListData'](props.pageName)
     )
     return {
-      dataList
+      dataList,
+      getPageData
     }
   }
 })

@@ -32,7 +32,8 @@ export default defineComponent({
   components: {
     HyForm
   },
-  setup(props) {
+  emits: ['handleReset', 'handleQuery'],
+  setup(props, { emit }) {
     // 双向绑定的属性应该是由配置文件的field字段决定
     // 1.优化一：formData中的属性应该动态来决定
     const formItems = props.searchFormConfig?.formItems ?? []
@@ -48,13 +49,20 @@ export default defineComponent({
       for (const key in formOriginData) {
         formData.value[`${key}`] = formOriginData.key
       }
+      emit('handleReset')
       // 方法二：不采用双向绑定
       // formData.value = formOriginData
     }
 
     // 3.优化三:当用户点击搜索
     const handleQuery = () => {
-      console.log(123)
+      const queryInfo: any = {}
+      for (const key in formData.value) {
+        if (formData.value[key] !== '') {
+          queryInfo[key] = formData.value[key]
+        }
+      }
+      emit('handleQuery', queryInfo)
     }
 
     return {

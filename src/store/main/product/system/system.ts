@@ -1,6 +1,6 @@
 import { Module } from 'vuex'
 import { IRootState } from '@/store/types'
-import { ISystemState } from './types'
+import { ISystemState, IPageListPayload } from './types'
 import { getPageListData } from '@/service/main/system/system'
 import toUpper from '@/utils/toUpper'
 
@@ -44,7 +44,7 @@ const systemModule: Module<ISystemState, IRootState> = {
     }
   },
   actions: {
-    async getPageListAction({ commit }, payload: any) {
+    async getPageListAction({ commit }, payload: IPageListPayload) {
       // 1.封装通用的请求数据逻辑
       const pageName = payload.pageName
       // const pageUrl = `/${pageName}/list`
@@ -61,7 +61,7 @@ const systemModule: Module<ISystemState, IRootState> = {
       }
 
       // 2.对页面发送请求
-      const pageResult = await getPageListData(pageUrl, payload.userInfo)
+      const pageResult = await getPageListData(pageUrl, payload.queryInfo)
       const { list, totalCount } = pageResult.data
 
       // 3.将数据存储到state中

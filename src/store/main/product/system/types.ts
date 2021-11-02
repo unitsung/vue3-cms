@@ -4,3 +4,8 @@ export interface ISystemState {
   roleList: any[]
   roleCount: number
 }
+
+export interface IPageListPayload {
+  pageName: string
+  queryInfo: any
+}
