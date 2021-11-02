@@ -25,9 +25,9 @@
               <template v-else-if="item.type === 'select'">
                 <el-select
                   :placeholder="item.placeholder"
-                  style="width: 100%"
                   v-bind="item.otherOptions"
                   v-model="formData[`${item.field}`]"
+                  style="width: 100%"
                 >
                   <el-option
                     v-for="option in item.options"
@@ -40,8 +40,8 @@
               <template v-else-if="item.type === 'date-picker'">
                 <el-date-picker
                   v-bind="item.otherOptions"
-                  style="width: 100%"
                   v-model="formData[`${item.field}`]"
+                  style="width: 100%"
                 ></el-date-picker>
               </template>
             </el-form-item>
@@ -95,8 +95,8 @@ export default defineComponent({
   },
   emits: ['update:modelValue'],
   setup(props, { emit }) {
+    /* 方式一：双向绑定 */
     const formData = ref({ ...props.modelValue })
-
     // 监听数据发生变化(formData的属性改变，需要添加deep:true) ，手动实现双向绑定而不是修改props
     watch(
       formData,
@@ -106,8 +106,16 @@ export default defineComponent({
       { deep: true }
     )
 
+    /* 方式二：不采用双向绑定*/
+    // const handleValueChange = (value: any, field: string) => {
+    //   // 一但el-input内容发生改变，就把整个props.modelValue(也就是父组件绑定的formData)传出去
+    //   // 并且将modelValue的[field]属性，也就是el-input绑定的内容，改变
+    //   emit('update:modelValue', { ...props.modelValue, [field]: value })
+    // }
+
     return {
       formData
+      // handleValueChange
     }
   }
 })

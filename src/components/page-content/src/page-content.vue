@@ -56,6 +56,7 @@ export default defineComponent({
   setup(props) {
     const store = useStore()
 
+    // 发送网络请求
     store.dispatch('system/getPageListAction', {
       pageName: props.pageName,
       queryInfo: {
@@ -64,6 +65,7 @@ export default defineComponent({
       }
     })
 
+    // 从vuex拿到数据
     const dataList = computed(() =>
       store.getters['system/pageListData'](props.pageName)
     )

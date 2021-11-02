@@ -9,7 +9,9 @@
           <el-button icon="el-icon-refresh" @click="handleResetClick"
             >重置</el-button
           >
-          <el-button type="primary" icon="el-icon-search">搜索</el-button>
+          <el-button type="primary" icon="el-icon-search" @click="handleQuery"
+            >搜索</el-button
+          >
         </div>
       </template>
     </hy-form>
@@ -42,12 +44,23 @@ export default defineComponent({
 
     // 2.优化二：用户点击重置
     const handleResetClick = () => {
-      console.log('重置')
+      // 方法一：双向绑定
+      for (const key in formOriginData) {
+        formData.value[`${key}`] = formOriginData.key
+      }
+      // 方法二：不采用双向绑定
+      // formData.value = formOriginData
+    }
+
+    // 3.优化三:当用户点击搜索
+    const handleQuery = () => {
+      console.log(123)
     }
 
     return {
       formData,
-      handleResetClick
+      handleResetClick,
+      handleQuery
     }
   }
 })
