@@ -9,7 +9,7 @@ import {
 import { IAccount } from '@/service/login/types'
 import localCache from '@/utils/cache'
 import router from '@/router'
-import { mapMenuToRoutes } from '@/utils/mapMenus'
+import { mapMenuToRoutes, mapMenusToPermissions } from '@/utils/mapMenus'
 
 // 必须传入两个泛型 模块state的类型，根模块state类型
 const loginModule: Module<ILoginState, IRootState> = {
@@ -18,7 +18,8 @@ const loginModule: Module<ILoginState, IRootState> = {
     return {
       token: '',
       userInfo: {},
-      userMenu: []
+      userMenu: [],
+      permissions: []
     }
   },
   getters: {},
@@ -39,6 +40,11 @@ const loginModule: Module<ILoginState, IRootState> = {
       routes.forEach((route) => {
         router.addRoute('main', route)
       })
+
+      // 获取用户按钮权限
+
+      const permissions = mapMenusToPermissions(userMenu)
+      state.permissions = permissions
     }
   },
   actions: {

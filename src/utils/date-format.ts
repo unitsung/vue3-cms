@@ -11,7 +11,7 @@ export function formatUtcString(
   utcString: string,
   format: string = DATE_TIME_FORMAT
 ) {
-  return dayjs.utc(utcString).format(format)
+  return dayjs.utc(utcString).local().format(format)
 }
 
 // 格式化时间戳

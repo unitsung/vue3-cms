@@ -11,21 +11,24 @@ const systemModule: Module<ISystemState, IRootState> = {
       userList: [],
       userCount: 0,
       roleList: [],
-      roleCount: 0
+      roleCount: 0,
+      goodsList: [],
+      goodsCount: 0,
+      menuList: [],
+      menuCount: 0
     }
   },
   getters: {
     pageListData(state) {
       // getters可以返回一个函数
       return (pageName: string) => {
-        switch (pageName) {
-          case 'user':
-            return state.userList
-          case 'role':
-            return state.roleList
-          default:
-            break
-        }
+        return (state as any)[`${pageName}List`]
+      }
+    },
+    pageListCount(state) {
+      // getters可以返回一个函数
+      return (pageName: string) => {
+        return (state as any)[`${pageName}Count`]
       }
     }
   },
@@ -41,24 +44,41 @@ const systemModule: Module<ISystemState, IRootState> = {
     },
     changeRoleCount(state, roleCount: number) {
       state.roleCount = roleCount
+    },
+    changeGoodsList(state, list: any[]) {
+      state.goodsList = list
+    },
+    changeGoodsCount(state, goodsCount: number) {
+      state.goodsCount = goodsCount
+    },
+    changeMenuList(state, list: any[]) {
+      state.menuList = list
+    },
+    changeMenuCount(state, menuCount: number) {
+      state.menuCount = menuCount
     }
   },
   actions: {
     async getPageListAction({ commit }, payload: IPageListPayload) {
       // 1.封装通用的请求数据逻辑
       const pageName = payload.pageName
-      // const pageUrl = `/${pageName}/list`
       let pageUrl = ''
-      switch (pageName) {
-        case 'user':
-          pageUrl = '/users/list'
-          break
-        case 'role':
-          pageUrl = '/role/list'
-          break
-        default:
-          break
+      if (pageName === 'user') {
+        pageUrl = '/users/list'
+      } else {
+        pageUrl = `/${pageName}/list`
       }
+      // let pageUrl = ''
+      // switch (pageName) {
+      //   case 'user':
+      //     pageUrl = '/users/list'
+      //     break
+      //   case 'role':
+      //     pageUrl = '/role/list'
+      //     break
+      //   default:
+      //     break
+      // }
 
       // 2.对页面发送请求
       const pageResult = await getPageListData(pageUrl, payload.queryInfo)
