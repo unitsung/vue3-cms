@@ -1,13 +1,11 @@
 <template>
   <div class="page-modal">
-    <el-dialog
-      title="新建用户"
-      v-model="dialogVisible"
-      width="30%"
-      center
-      destroy-on-close
-    >
+    <el-dialog v-model="dialogVisible" width="30%" center destroy-on-close>
+      <template #title>
+        {{ isEdit ? `编辑${getPageName()}` : `新建${getPageName()}` }}
+      </template>
       <hy-form v-bind="modalConfig" v-model="formData"></hy-form>
+      <slot></slot>
       <template #footer>
         <span>
           <el-button @click="dialogVisible = false">取消</el-button>
@@ -19,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch } from 'vue'
+import { defineComponent, ref, watch, computed } from 'vue'
 import HyForm from '@/base-ui/form'
 import { useStore } from '@/store'
 export default defineComponent({
@@ -29,6 +27,12 @@ export default defineComponent({
       required: true
     },
     defaultInfo: {
+      type: Object,
+      default: () => {
+        return {}
+      }
+    },
+    otherInfo: {
       type: Object,
       default: () => {
         return {}
@@ -52,27 +56,44 @@ export default defineComponent({
     )
     // 点击确定按钮逻辑
     const store = useStore()
+    // 判断是否是编辑
+    const isEdit = computed(() =>
+      Object.keys(props.defaultInfo).length ? true : false
+    )
     const handleConfirmClick = () => {
       dialogVisible.value = false
-      if (Object.keys(props.defaultInfo).length) {
+      if (isEdit.value) {
         // 编辑操作
         store.dispatch('system/editPageDataAction', {
           pageName: props.pageName,
-          editData: { ...formData.value },
+          editData: { ...formData.value, ...props.otherInfo },
           id: props.defaultInfo.id
         })
       } else {
         // 新建操作
         store.dispatch('system/createPageDataAction', {
           pageName: props.pageName,
-          newData: { ...formData.value }
+          newData: { ...formData.value, ...props.otherInfo }
         })
+      }
+    }
+    const pageNameMap = new Map([
+      ['user', '用户'],
+      ['users', '用户'],
+      ['role', '角色'],
+      ['menu', '菜单']
+    ])
+    const getPageName = () => {
+      if (props.pageName) {
+        return pageNameMap.get(props.pageName)
       }
     }
     return {
       dialogVisible,
       formData,
-      handleConfirmClick
+      handleConfirmClick,
+      isEdit,
+      getPageName
     }
   }
 })

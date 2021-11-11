@@ -40,7 +40,7 @@ export const searchFormConfig: IForm = {
         endPlaceholder: '结束时间',
         type: 'daterange'
       },
-      field: 'createTime'
+      field: 'createAt'
     }
   ],
   // colLayout: {
