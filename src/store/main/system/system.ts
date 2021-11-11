@@ -1,7 +1,12 @@
 import { Module } from 'vuex'
 import { IRootState } from '@/store/types'
 import { ISystemState, IPageListPayload } from './types'
-import { getPageListData } from '@/service/main/system/system'
+import {
+  deletePageData,
+  getPageListData,
+  createPageData,
+  editPageData
+} from '@/service/main/system/system'
 import toUpper from '@/utils/toUpper'
 
 const systemModule: Module<ISystemState, IRootState> = {
@@ -15,7 +20,8 @@ const systemModule: Module<ISystemState, IRootState> = {
       goodsList: [],
       goodsCount: 0,
       menuList: [],
-      menuCount: 0
+      menuCount: 0,
+      queryInfo: {}
     }
   },
   getters: {
@@ -56,6 +62,9 @@ const systemModule: Module<ISystemState, IRootState> = {
     },
     changeMenuCount(state, menuCount: number) {
       state.menuCount = menuCount
+    },
+    changeQueryInfo(state, queryInfo: any) {
+      state.queryInfo = queryInfo
     }
   },
   actions: {
@@ -87,6 +96,66 @@ const systemModule: Module<ISystemState, IRootState> = {
       // 3.将数据存储到state中
       commit(`change${toUpper(pageName)}List`, list)
       commit(`change${toUpper(pageName)}Count`, totalCount)
+    },
+    async deletePageDataAction({ state, dispatch }, payload: any) {
+      // 1.获取pageName和id
+      // 1.pageName -> /users
+      // 2.id -> /users/id
+      const { id } = payload
+      let { pageName } = payload
+      if (pageName === 'user') pageName = 'users'
+      const pageUrl = `${pageName}/${id}`
+
+      //2.调用删除网络请求
+      await deletePageData(pageUrl)
+      if (pageName === 'users') pageName = 'user'
+      // 3.重新请求最新的数据
+      dispatch('getPageListAction', {
+        pageName,
+        queryInfo: {
+          offset: 0,
+          size: 10,
+          ...state.queryInfo
+        }
+      })
+    },
+    async createPageDataAction({ state, dispatch }, payload: any) {
+      const { newData } = payload
+      let { pageName } = payload
+      const pageUrl = `${pageName}`
+
+      //2.创建数据网络请求
+      await createPageData(pageUrl, newData)
+
+      // 3.重新请求最新的数据
+      if (pageName === 'users') pageName = 'user'
+      dispatch('getPageListAction', {
+        pageName,
+        queryInfo: {
+          offset: 0,
+          size: 10,
+          ...state.queryInfo
+        }
+      })
+    },
+    async editPageDataAction({ state, dispatch }, payload: any) {
+      const { editData, id } = payload
+      let { pageName } = payload
+      const pageUrl = `${pageName}/${id}`
+
+      //2.编辑数据网络请求
+      await editPageData(pageUrl, editData)
+
+      // 3.重新请求最新的数据
+      if (pageName === 'users') pageName = 'user'
+      dispatch('getPageListAction', {
+        pageName,
+        queryInfo: {
+          offset: 0,
+          size: 10,
+          ...state.queryInfo
+        }
+      })
     }
   }
 }

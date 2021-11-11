@@ -7,6 +7,7 @@ export interface ISystemState {
   goodsCount: number
   menuList: any[]
   menuCount: number
+  queryInfo: any
 }
 
 export interface IPageListPayload {

@@ -20,6 +20,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
+import { useStore } from '@/store'
 import HyForm from '@/base-ui/form'
 
 export default defineComponent({
@@ -55,6 +56,7 @@ export default defineComponent({
     }
 
     // 3.优化三:当用户点击搜索
+    const store = useStore()
     const handleQuery = () => {
       const queryInfo: any = {}
       for (const key in formData.value) {
@@ -63,6 +65,7 @@ export default defineComponent({
         }
       }
       emit('handleQuery', queryInfo)
+      store.commit('system/changeQueryInfo', queryInfo)
     }
 
     return {
