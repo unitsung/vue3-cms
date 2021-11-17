@@ -7,6 +7,12 @@ export interface ISystemState {
   goodsCount: number
   menuList: any[]
   menuCount: number
+  categoryList: any[]
+  categoryCount: number
+  departmentList: any[]
+  departmentCount: number
+  storyCount: number
+  storyList: any[]
   queryInfo: any
 }
 

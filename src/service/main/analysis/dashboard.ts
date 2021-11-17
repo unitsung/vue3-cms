@@ -4,7 +4,9 @@ enum DashboardAPI {
   categoryGoodsCount = '/goods/category/count',
   categoryGoodsSale = '/goods/category/sale',
   categoryGoodsFavor = '/goods/category/favor',
-  addressGoodsSale = '/goods/address/sale'
+  addressGoodsSale = '/goods/address/sale',
+  amountList = '/goods/amount/list',
+  goodsSaleTop10 = '/goods/sale/top10'
 }
 
 export function getCategoryGoodsCount() {
@@ -25,5 +27,16 @@ export function getCategoryGoodsFavor() {
 export function getAddressGoodsSale() {
   return hyRequest.get({
     url: DashboardAPI.addressGoodsSale
+  })
+}
+export function getAmountList() {
+  return hyRequest.get({
+    url: DashboardAPI.amountList
+  })
+}
+
+export function getGoodsSaleTop10() {
+  return hyRequest.get({
+    url: DashboardAPI.goodsSaleTop10
   })
 }
